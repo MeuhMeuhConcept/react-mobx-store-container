@@ -1,1 +1,3 @@
 .home-developer
+node_modules/
+yarn-error.log
