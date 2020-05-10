@@ -11,8 +11,9 @@ interface Props {
 interface State {}
 
 class DynamicProvider extends React.Component<Props, State> {
+    constructor (props: Props) {
+        super(props)
 
-    componentWillMount () {
         for (const name of this.props.names) {
             if (this.props.container && !this.props.container.has(name) && this.props.factories && this.props.factories[name]) {
                 this.props.container.addStore(name, this.props.factories[name]())

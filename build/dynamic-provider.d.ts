@@ -12,7 +12,7 @@ interface Props {
 interface State {
 }
 declare class DynamicProvider extends React.Component<Props, State> {
-    componentWillMount(): void;
+    constructor(props: Props);
     render(): JSX.Element;
 }
 declare const _default: typeof DynamicProvider & import("mobx-react").IWrappedComponent<Props>;

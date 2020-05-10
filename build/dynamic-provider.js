@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { observer, inject, Provider } from 'mobx-react';
 class DynamicProvider extends React.Component {
-    componentWillMount() {
+    constructor(props) {
+        super(props);
         for (const name of this.props.names) {
             if (this.props.container && !this.props.container.has(name) && this.props.factories && this.props.factories[name]) {
                 this.props.container.addStore(name, this.props.factories[name]());
