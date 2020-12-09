@@ -9,10 +9,14 @@ import { has } from 'lodash';
 export default class StoreContainer {
     constructor() {
         this.stores = {};
+        this._initializeData = {};
     }
     addStore(key, store) {
         if (!has(this.stores, key)) {
             this.stores[key] = store;
+            if (typeof store.deserialize === 'function' && this._initializeData[key]) {
+                store.deserialize(this._initializeData[key]);
+            }
         }
     }
     has(key) {
@@ -21,6 +25,25 @@ export default class StoreContainer {
     get(key) {
         if (this.has(key)) {
             return this.stores[key];
+        }
+    }
+    serialize() {
+        const s = {};
+        for (const key in this.stores) {
+            const store = this.stores[key];
+            if (typeof store.serialize === 'function') {
+                s[key] = store.serialize();
+            }
+        }
+        return s;
+    }
+    deserialize(data) {
+        this._initializeData = data;
+        for (const key in this.stores) {
+            const store = this.stores[key];
+            if (typeof store.deserialize === 'function' && data[key]) {
+                store.deserialize(data[key]);
+            }
         }
     }
 }
