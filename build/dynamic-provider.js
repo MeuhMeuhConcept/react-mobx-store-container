@@ -1,5 +1,14 @@
-import * as React from 'react';
-import { observer, inject, Provider } from 'mobx-react';
+"use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __importStar(require("react"));
+const mobx_react_1 = require("mobx-react");
 class DynamicProvider extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +26,7 @@ class DynamicProvider extends React.Component {
             }
             stores[name] = this.props.container.get(name);
         }
-        return (React.createElement(Provider, Object.assign({}, stores), React.Children.only(this.props.children)));
+        return (React.createElement(mobx_react_1.Provider, Object.assign({}, stores), React.Children.only(this.props.children)));
     }
 }
-export default inject('container')(observer(DynamicProvider));
+exports.default = mobx_react_1.inject('container')(mobx_react_1.observer(DynamicProvider));
