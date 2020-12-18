@@ -4,7 +4,7 @@ import StoreContainer from './store-container'
 import StoreFactory from './store-factory'
 
 interface Props {
-    names: (string | StoreFactory)[],
+    names: (string | StoreFactory | (() => string) | (() => StoreFactory))[],
     container?: StoreContainer,
     factories?: { [id: string]: { (...dependencies: any[]): any }}
     dependencies?: { [id: string]: string[]}
@@ -17,12 +17,14 @@ class DynamicProvider extends React.Component<Props, State> {
         super(props)
 
         for (const name of this.props.names) {
-            if (typeof name === 'string') {
-                if (this.props.container && !this.props.container.hasFactory(name) && this.props.factories && this.props.factories[name]) {
-                    const creator = this.props.factories[name]
+            const reference = (typeof name === 'function') ? name() : name
+
+            if (typeof reference === 'string') {
+                if (this.props.container && !this.props.container.hasFactory(reference) && this.props.factories && this.props.factories[reference]) {
+                    const creator = this.props.factories[reference]
                     const factory: StoreFactory = {
-                        key: name,
-                        dependencies: this.props.dependencies && this.props.dependencies[name] ? this.props.dependencies[name] : [],
+                        key: reference,
+                        dependencies: this.props.dependencies && this.props.dependencies[reference] ? this.props.dependencies[reference] : [],
                         create: (...dependencies: any[]) => creator(...dependencies)
                     }
 
@@ -30,7 +32,7 @@ class DynamicProvider extends React.Component<Props, State> {
                 }
             } else {
                 if (this.props.container) {
-                    this.props.container.addFactory(name as StoreFactory)
+                    this.props.container.addFactory(reference as StoreFactory)
                 }
             }
         }
@@ -40,7 +42,8 @@ class DynamicProvider extends React.Component<Props, State> {
         const stores: {[key: string]: any} = {}
 
         for (const name of this.props.names) {
-            const key: string = (typeof name === 'string') ? name : name.key
+            const reference = (typeof name === 'function') ? name() : name
+            const key: string = (typeof reference === 'string') ? reference : reference.key
 
             if (!this.props.container || !this.props.container.has(key)) {
                 return <></>
