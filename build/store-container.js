@@ -12,6 +12,7 @@ class StoreContainer {
     constructor() {
         this.stores = {};
         this._initializeData = {};
+        this.factories = [];
     }
     addStore(key, store) {
         if (!lodash_1.has(this.stores, key)) {
@@ -22,11 +23,70 @@ class StoreContainer {
         }
     }
     has(key) {
-        return lodash_1.has(this.stores, key);
+        return this.keys.indexOf(key) >= 0;
     }
     get(key) {
-        if (this.has(key)) {
+        return this._get(key, []);
+    }
+    _get(key, parents) {
+        if (this.ready(key)) {
             return this.stores[key];
+        }
+        const factory = this.getFactory(key);
+        if (factory === undefined) {
+            return undefined;
+        }
+        const dependencies = [];
+        for (const dependency of factory.dependencies) {
+            if (dependency === factory.key) {
+                throw new Error('auto dependence ' + factory.key + ' => ' + dependency);
+            }
+            if (parents.indexOf(dependency) >= 0) {
+                throw new Error('cirular dependencies ' + parents.join(' -> ') + ' -> ' + factory.key + ' => ' + dependency);
+            }
+            dependencies.push(this._get(dependency, parents.concat([factory.key])));
+        }
+        const store = factory.create(...dependencies);
+        this.addStore(factory.key, store);
+        return store;
+    }
+    ready(key) {
+        return lodash_1.has(this.stores, key);
+    }
+    get keys() {
+        const keys = Object.keys(this.stores);
+        for (const factory of this.factories) {
+            if (keys.indexOf(factory.key) < 0) {
+                keys.push(factory.key);
+            }
+        }
+        return keys;
+    }
+    addFactories(factories) {
+        for (const factory of factories) {
+            this.addFactory(factory);
+        }
+        return this;
+    }
+    addFactory(factory) {
+        if (!this.hasFactory(factory.key)) {
+            this.factories.push(factory);
+        }
+        return this;
+    }
+    hasFactory(key) {
+        for (const factory of this.factories) {
+            if (factory.key === key) {
+                return true;
+            }
+        }
+        return false;
+    }
+    getFactory(key) {
+        for (const factory of this.factories) {
+            if (factory.key === key) {
+                return factory;
+            }
         }
     }
     serialize() {
@@ -53,6 +113,12 @@ __decorate([
     mobx_1.observable
 ], StoreContainer.prototype, "stores", void 0);
 __decorate([
+    mobx_1.observable
+], StoreContainer.prototype, "factories", void 0);
+__decorate([
     mobx_1.action
 ], StoreContainer.prototype, "addStore", null);
+__decorate([
+    mobx_1.computed
+], StoreContainer.prototype, "keys", null);
 exports.default = StoreContainer;
