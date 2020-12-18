@@ -122,6 +122,16 @@ test('factory with dependency', () => {
     expect(container.get('needBar').get()).toBe('foo')
 })
 
+test('factory unknown dependency', () => {
+    container.addFactory({
+        key: 'needUnknown',
+        dependencies: ['bra'],
+        create: (bar: Bar) => new NeedBar(bar)
+    })
+
+    expect(() => container.get('needUnknown')).toThrow('no dependency with key : bra')
+})
+
 test('factory with circular dependencies', () => {
     container.addFactory({
         key: 'loo',

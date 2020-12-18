@@ -44,7 +44,11 @@ class StoreContainer {
             if (parents.indexOf(dependency) >= 0) {
                 throw new Error('cirular dependencies ' + parents.join(' -> ') + ' -> ' + factory.key + ' => ' + dependency);
             }
-            dependencies.push(this._get(dependency, parents.concat([factory.key])));
+            const d = this._get(dependency, parents.concat([factory.key]));
+            if (d === undefined) {
+                throw new Error('no dependency with key : ' + dependency);
+            }
+            dependencies.push(d);
         }
         const store = factory.create(...dependencies);
         this.addStore(factory.key, store);
