@@ -5,8 +5,11 @@ interface Props {
     container?: StoreContainer;
     factories?: {
         [id: string]: {
-            (): any;
+            (...dependencies: any[]): any;
         };
+    };
+    dependencies?: {
+        [id: string]: string[];
     };
 }
 interface State {

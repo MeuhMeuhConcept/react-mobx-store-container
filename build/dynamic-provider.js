@@ -14,7 +14,13 @@ class DynamicProvider extends React.Component {
         super(props);
         for (const name of this.props.names) {
             if (this.props.container && !this.props.container.has(name) && this.props.factories && this.props.factories[name]) {
-                this.props.container.addStore(name, this.props.factories[name]());
+                const dependencies = [];
+                if (this.props.dependencies && this.props.dependencies[name]) {
+                    for (const dependency of this.props.dependencies[name]) {
+                        dependencies.push(this.props.container.has(dependency) ? this.props.container.get(dependency) : null);
+                    }
+                }
+                this.props.container.addStore(name, this.props.factories[name](...dependencies));
             }
         }
     }
