@@ -1,7 +1,8 @@
 import * as React from 'react';
 import StoreContainer from './store-container';
+import StoreFactory from './store-factory';
 interface Props {
-    names: string[];
+    names: (string | StoreFactory)[];
     container?: StoreContainer;
     factories?: {
         [id: string]: {

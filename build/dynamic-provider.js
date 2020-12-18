@@ -13,24 +13,32 @@ class DynamicProvider extends React.Component {
     constructor(props) {
         super(props);
         for (const name of this.props.names) {
-            if (this.props.container && !this.props.container.hasFactory(name) && this.props.factories && this.props.factories[name]) {
-                const creator = this.props.factories[name];
-                const factory = {
-                    key: name,
-                    dependencies: this.props.dependencies && this.props.dependencies[name] ? this.props.dependencies[name] : [],
-                    create: (...dependencies) => creator(...dependencies)
-                };
-                this.props.container.addFactory(factory);
+            if (typeof name === 'string') {
+                if (this.props.container && !this.props.container.hasFactory(name) && this.props.factories && this.props.factories[name]) {
+                    const creator = this.props.factories[name];
+                    const factory = {
+                        key: name,
+                        dependencies: this.props.dependencies && this.props.dependencies[name] ? this.props.dependencies[name] : [],
+                        create: (...dependencies) => creator(...dependencies)
+                    };
+                    this.props.container.addFactory(factory);
+                }
+            }
+            else {
+                if (this.props.container) {
+                    this.props.container.addFactory(name);
+                }
             }
         }
     }
     render() {
         const stores = {};
         for (const name of this.props.names) {
-            if (!this.props.container || !this.props.container.has(name)) {
+            const key = (typeof name === 'string') ? name : name.key;
+            if (!this.props.container || !this.props.container.has(key)) {
                 return React.createElement(React.Fragment, null);
             }
-            stores[name] = this.props.container.get(name);
+            stores[key] = this.props.container.get(key);
         }
         return (React.createElement(mobx_react_1.Provider, Object.assign({}, stores), React.Children.only(this.props.children)));
     }
