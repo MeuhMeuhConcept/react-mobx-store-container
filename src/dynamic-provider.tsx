@@ -29,10 +29,12 @@ class DynamicProvider extends React.Component<Props, State> {
                     }
 
                     this.props.container.addFactory(factory)
+                    this.props.container.get(reference)
                 }
             } else {
                 if (this.props.container) {
                     this.props.container.addFactory(reference as StoreFactory)
+                    this.props.container.get(reference.key)
                 }
             }
         }

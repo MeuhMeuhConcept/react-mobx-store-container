@@ -23,11 +23,13 @@ class DynamicProvider extends React.Component {
                         create: (...dependencies) => creator(...dependencies)
                     };
                     this.props.container.addFactory(factory);
+                    this.props.container.get(reference);
                 }
             }
             else {
                 if (this.props.container) {
                     this.props.container.addFactory(reference);
+                    this.props.container.get(reference.key);
                 }
             }
         }
