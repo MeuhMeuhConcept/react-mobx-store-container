@@ -1,6 +1,6 @@
 {
   "name": "react-mobx-store-container",
-  "version": "1.10.3",
+  "version": "1.10.4",
   "main": "build/index.js",
   "typings": "build/index",
   "repository": "git@github.com:MeuhMeuhConcept/react-mobx-store-container.git",
@@ -32,7 +32,7 @@
     "lodash.has": "^4.5.2",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
-    "react": "^16.13.0"
+    "react": "^17.0.1"
   },
   "resolutions": {
     "lodash": "^4.17.19",
