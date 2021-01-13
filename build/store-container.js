@@ -125,4 +125,7 @@ __decorate([
 __decorate([
     mobx_1.computed
 ], StoreContainer.prototype, "keys", null);
+__decorate([
+    mobx_1.action
+], StoreContainer.prototype, "addFactory", null);
 exports.default = StoreContainer;

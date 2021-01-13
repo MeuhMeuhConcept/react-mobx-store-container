@@ -1,6 +1,6 @@
 {
   "name": "react-mobx-store-container",
-  "version": "1.10.4",
+  "version": "1.10.5",
   "main": "build/index.js",
   "typings": "build/index",
   "repository": "git@github.com:MeuhMeuhConcept/react-mobx-store-container.git",

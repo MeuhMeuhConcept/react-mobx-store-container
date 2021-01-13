@@ -92,6 +92,7 @@ export default class StoreContainer {
         return this
     }
 
+    @action
     addFactory (factory: StoreFactory): this {
         if (!this.hasFactory(factory.key)) {
             this.factories.push(factory)
