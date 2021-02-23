@@ -21,6 +21,9 @@ class StoreContainer {
                 store.deserialize(this._initializeData[key]);
             }
         }
+        if (typeof store.initialization === 'function') {
+            store.initialization();
+        }
     }
     has(key) {
         return this.keys.indexOf(key) >= 0;

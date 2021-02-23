@@ -20,6 +20,10 @@ export default class StoreContainer {
                 store.deserialize(this._initializeData[key])
             }
         }
+
+        if (typeof store.initialization === 'function') {
+            store.initialization()
+        }
     }
 
     has (key: string) {
