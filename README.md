@@ -1,6 +1,8 @@
 # react-mobx-store-container
 Dynamic store to manage others stores (specialy usefull with react-loadable)
 
+Obsolete, use code-202/react-mobx-sotre-container instead
+
 ## Use
 
 ### Install StoreContainer
